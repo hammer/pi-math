@@ -52,9 +52,38 @@ export class StageRunner {
             await this.onArtifact(result);
             return result;
         };
+        // Drafts rejected by the response schema or the caller's local validator get bounded retries carrying the exact rejection reason; transport, budget and cancellation failures propagate untouched, and the final check still throws so invalid drafts can never pass silently.
+        const askValidated = async <V>(role: string, prompt: string, payload: Record<string, unknown>, responseSchema: z.ZodType<V>, extract: (response: V) => T): Promise<V> => {
+            let feedback: string | null = null, rejectedDraft: unknown;
+            for (let attempt = 0; attempt < this.config.maxSectionAttempts; attempt++) {
+                const last = attempt === this.config.maxSectionAttempts - 1;
+                let response: V;
+                try {
+                    response = await this.broker.ask(role, feedback === null ? prompt : `${prompt}\nA local validator rejected the previous draft: ${feedback}\nReturn a corrected draft that satisfies this requirement exactly.`, feedback === null ? payload : { ...payload, rejectedDraft }, responseSchema);
+                }
+                catch (error) {
+                    if (!(error instanceof z.ZodError) || last)
+                        throw error;
+                    feedback = JSON.stringify(error.issues);
+                    rejectedDraft = undefined;
+                    continue;
+                }
+                try {
+                    options.validate?.(extract(response));
+                    return response;
+                }
+                catch (error) {
+                    if (last)
+                        throw error;
+                    feedback = error instanceof Error ? error.message : String(error);
+                    rejectedDraft = extract(response);
+                }
+            }
+            throw new Error("Unreachable: maxSectionAttempts is at least one");
+        };
         let population = await settleAll(Array.from({ length: this.config.widths[0]! }, async (_, i) => {
             const id = `${stageId}-leaf-${i}`;
-            const value = await this.broker.ask(`${stage}/generate`, instruction, { task: input, perspective: PERSPECTIVES[i % PERSPECTIVES.length], candidate: i }, schema);
+            const value = await askValidated(`${stage}/generate`, instruction, { task: input, perspective: PERSPECTIVES[i % PERSPECTIVES.length], candidate: i }, schema, v => v);
             return review(id, value, options.inheritedObjections ?? [], [], []);
         }));
         for (let level = 1; level < this.config.widths.length; level++) {
@@ -63,7 +92,7 @@ export class StageRunner {
             population = await settleAll(groups.map(async (group, i) => {
                 const id = `${stageId}-level-${level}-${i}`;
                 const inherited = merge([...group.map(c => c.objections), ...(isRoot ? [[...targetObjections.values()]] : [])]);
-                const result = await this.broker.ask(`${stage}/synthesize`, `${instruction}\nConstruct one new artifact from the sampled candidates AND critiques. Combine compatible mathematics, preserve useful minority routes, and retain uncertainty. This is synthesis, not majority voting. Supply a disposition for any inherited objection you believe is repaired, refuted or irrelevant; a separate reviewer decides whether it is discharged.`, { task: input, candidates: group, inheritedObjections: inherited }, z.object({ value: schema, resolutions: z.array(ResolutionSchema).max(100) }).strict());
+                const result = await askValidated(`${stage}/synthesize`, `${instruction}\nConstruct one new artifact from the sampled candidates AND critiques. Combine compatible mathematics, preserve useful minority routes, and retain uncertainty. This is synthesis, not majority voting. Supply a disposition for any inherited objection you believe is repaired, refuted or irrelevant; a separate reviewer decides whether it is discharged.`, { task: input, candidates: group, inheritedObjections: inherited }, z.object({ value: schema, resolutions: z.array(ResolutionSchema).max(100) }).strict(), r => r.value);
                 if (result.resolutions.some(r => !inherited.some(o => o.id === r.id)))
                     throw new Error("Aggregator referenced an unknown objection");
                 return review(id, result.value, inherited, result.resolutions, group.map(g => g.id));

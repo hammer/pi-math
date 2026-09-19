@@ -35,7 +35,7 @@ export function resolveReasoning(model: Model<Api>, g: Generation): Effort | "of
     const requested = g.reasoning ?? "auto";
     if (requested === "default") return "default";
     if (!model.reasoning) {
-        if (!["auto", "off"].includes(String(requested))) throw new Error("Selected model does not declare reasoning support.");
+        if (!["auto", "off"].includes(String(requested))) throw new Error("Selected model does not declare reasoning support. If you recently corrected this model's metadata, reselect it in /model or restart Pi so the session uses the updated entry.");
         return "off";
     }
     if (typeof requested === "number") {

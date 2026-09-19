@@ -157,3 +157,27 @@ test("re-exploration cannot discard an unresolved whole-proof objection", async 
     await engine.step();
     assert.equal(state.phase, "explore");
 });
+test("an invalid exploration retries locally, and a persistent failure does not consume a round", async () => {
+    let broken = true;
+    const state = newResearch("The sum of two even integers is even", [], { widths: [1], concurrency: 2, maxSectionAttempts: 2 });
+    const worker: Worker = { async complete(r) {
+            const input = JSON.parse(r.prompt), t = input.task;
+            if (r.role === "curator")
+                return { text: '{"entries":[]}' };
+            if (r.role.endsWith("/critic"))
+                return { text: JSON.stringify({ verdict: "accept", summary: "Fixture review", issues: [], resolved: [] }) };
+            if (r.role === "explore/generate") {
+                const target = broken ? "A paraphrased restatement of the target" : t.problem;
+                return { text: JSON.stringify({ target, mechanism: "Algebra", hypotheses: t.assumptions, lemmas: ["First", "Second"], bottleneck: "Combine", gateway: { test: "Check parity", ifPass: "Prove", ifFail: "Refute" }, alternatives: [], obligations: [], evidence: [] }) };
+            }
+            throw new Error(`Unexpected role ${r.role}`);
+        } };
+    const engine = new ProofEngine(state, new StageRunner(new Broker(worker, state.config)));
+    await assert.rejects(engine.step(), /Strategy changed the target: expected exactly "The sum of two even integers is even", got "A paraphrased restatement of the target"/);
+    assert.equal(state.round, 0); // the failed exploration consumed no round budget
+    assert.equal(state.phase, "explore");
+    broken = false;
+    await engine.step();
+    assert.equal(state.round, 1);
+    assert.equal(state.phase, "gate");
+});

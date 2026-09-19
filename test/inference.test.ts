@@ -119,3 +119,68 @@ test("a failed parallel tree drains sibling work before returning or allowing la
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(persisted.length, 1);
 });
+test("a locally rejected draft is retried with its exact rejection reason before the stage fails", async () => {
+    const worker: Worker = { async complete(r) {
+            if (r.role.endsWith("/generate")) {
+                const input = JSON.parse(r.prompt);
+                if (input.rejectedDraft === undefined)
+                    return { text: '{"value":1}' };
+                // The corrective retry must carry both the rejected draft and the validator's exact reason.
+                assert.deepEqual(input.rejectedDraft, { value: 1 });
+                assert.ok(r.system.includes("wrong value: 1"));
+                return { text: '{"value":7}' };
+            }
+            return { text: JSON.stringify({ verdict: "accept", summary: "Fixture review", issues: [], resolved: [] }) };
+        } };
+    const config = ConfigSchema.parse({ widths: [1], maxSectionAttempts: 2 });
+    const runner = new StageRunner(new Broker(worker, config), config);
+    const root = await runner.run("example", "Generate", {}, output, { validate: v => { if (v.value !== 7) throw new Error(`wrong value: ${v.value}`); } });
+    assert.equal(root.value.value, 7);
+    assert.equal(runner.broker.usage.calls, 3); // initial draft, one corrected retry, one critic
+});
+test("a persistently rejected draft fails after bounded retries carrying the validator's reason", async () => {
+    const worker: Worker = { async complete(r) {
+            if (r.role.endsWith("/generate"))
+                return { text: '{"value":1}' };
+            return { text: JSON.stringify({ verdict: "accept", summary: "Fixture review", issues: [], resolved: [] }) };
+        } };
+    const config = ConfigSchema.parse({ widths: [2, 1], sampleSize: 2, maxSectionAttempts: 3 });
+    const runner = new StageRunner(new Broker(worker, config), config);
+    await assert.rejects(runner.run("example", "Generate", {}, output, { validate: v => { if (v.value !== 7) throw new Error(`wrong value: ${v.value}`); } }), /wrong value: 1/);
+    assert.equal(runner.broker.usage.calls, 6); // both leaves exhaust all attempts; no critics are dispatched
+});
+test("a schema-rejected draft is retried with the schema issues before the stage fails", async () => {
+    const worker: Worker = { async complete(r) {
+            if (r.role.endsWith("/generate")) {
+                if (!r.system.includes("rejected the previous draft"))
+                    return { text: '{"value":"one"}' };
+                assert.ok(r.system.includes("invalid_type"));
+                return { text: '{"value":2}' };
+            }
+            return { text: JSON.stringify({ verdict: "accept", summary: "Fixture review", issues: [], resolved: [] }) };
+        } };
+    const config = ConfigSchema.parse({ widths: [1], maxSectionAttempts: 2 });
+    const runner = new StageRunner(new Broker(worker, config), config);
+    const root = await runner.run("example", "Generate", {}, output);
+    assert.equal(root.value.value, 2);
+    assert.equal(runner.broker.usage.calls, 3); // shape-rejected draft, corrected draft, one critic
+});
+test("a persistently schema-rejected draft fails after bounded retries with the schema error", async () => {
+    const worker: Worker = { async complete(r) {
+            if (r.role.endsWith("/generate"))
+                return { text: '{"value":"one"}' };
+            return { text: JSON.stringify({ verdict: "accept", summary: "Fixture review", issues: [], resolved: [] }) };
+        } };
+    const config = ConfigSchema.parse({ widths: [1], maxSectionAttempts: 3 });
+    const runner = new StageRunner(new Broker(worker, config), config);
+    await assert.rejects(runner.run("example", "Generate", {}, output), z.ZodError);
+    assert.equal(runner.broker.usage.calls, 3);
+});
+test("transport failures are never retried", async () => {
+    let calls = 0;
+    const worker: Worker = { async complete() { calls++; throw new Error("Provider error"); } };
+    const config = ConfigSchema.parse({ widths: [1], maxSectionAttempts: 3 });
+    const runner = new StageRunner(new Broker(worker, config), config);
+    await assert.rejects(runner.run("example", "Generate", {}, output), /Provider error/);
+    assert.equal(calls, 1);
+});

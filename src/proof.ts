@@ -109,17 +109,18 @@ export class ProofEngine {
                         s.failure = "Exploration round limit reached";
                         break;
                     }
-                    s.round++;
                     const previous = s.archives.at(-1);
                     const review = s.verification ?? (previous?.problem === s.problem ? previous.verification : null);
                     s.strategy = await this.runner.run("explore", PROMPTS.explore, this.context(), StrategySchema, { inheritedObjections: [...(s.strategy?.objections ?? []), ...(review?.objections ?? [])], validate: value => {
                             if (value.target !== s.problem)
-                                throw new Error("Strategy changed the target");
+                                throw new Error(`Strategy changed the target: expected exactly ${JSON.stringify(s.problem)}, got ${JSON.stringify(value.target)}`);
                             if (!sameAssumptions(value.hypotheses, s.assumptions))
-                                throw new Error("Strategy changed the hypotheses");
+                                throw new Error(`Strategy changed the hypotheses: expected ${JSON.stringify(s.assumptions)}, got ${JSON.stringify(value.hypotheses)}`);
                             if (new Set(value.obligations.map(o => o.id)).size !== value.obligations.length)
                                 throw new Error("Duplicate obligations");
                         } });
+                    // Only completed explorations consume a round: a failed or invalid exploration must not eat the round budget.
+                    s.round++;
                     s.gate = null;
                     s.plan = null;
                     s.sections = {};
