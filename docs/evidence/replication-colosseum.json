@@ -1,0 +1,822 @@
+{
+  "version": 1,
+  "sourcePaper": "arXiv:2609.15983v2",
+  "configuration": {
+    "widths": [
+      4,
+      2,
+      1
+    ],
+    "sampleSize": 2,
+    "reviewers": 1
+  },
+  "caveat": "Deterministic fault-injection test of pi-math's orchestration, not a language-model or TCS-Bench replication. The fixture deliberately makes exact critics reliable and rotates one correct leaf among four; the result measures whether critique-preserving overlapping aggregation can recover that leaf under this known process.",
+  "summary": {
+    "episodes": 100,
+    "directCorrect": 25,
+    "adversarialTreeCorrect": 50,
+    "meanTreeCalls": 14
+  },
+  "results": [
+    {
+      "seed": 0,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 1,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 2,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 3,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 1
+    },
+    {
+      "seed": 4,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 5,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 6,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 3
+    },
+    {
+      "seed": 7,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 8,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 9,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 10,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 3
+    },
+    {
+      "seed": 11,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 12,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 13,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 14,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 15,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 1
+    },
+    {
+      "seed": 16,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 17,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 18,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 19,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 20,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 1
+    },
+    {
+      "seed": 21,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 22,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 3
+    },
+    {
+      "seed": 23,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 24,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 25,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 26,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 27,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 28,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 29,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 30,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 31,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 32,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 33,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 34,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 35,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 36,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 3
+    },
+    {
+      "seed": 37,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 38,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 39,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 1
+    },
+    {
+      "seed": 40,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 41,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 42,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 43,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 44,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 45,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 46,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 47,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 48,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 49,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 50,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 3
+    },
+    {
+      "seed": 51,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 52,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 3
+    },
+    {
+      "seed": 53,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 54,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 55,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 56,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 57,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 58,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 59,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 60,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 61,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 62,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 63,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 3
+    },
+    {
+      "seed": 64,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 65,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 66,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 67,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 68,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 69,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 70,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 71,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 72,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 73,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 74,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 75,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 76,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 3
+    },
+    {
+      "seed": 77,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 5
+    },
+    {
+      "seed": 78,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 79,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 80,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 3
+    },
+    {
+      "seed": 81,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 82,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 83,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 84,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 85,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 86,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 87,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 88,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 89,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 1
+    },
+    {
+      "seed": 90,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 91,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    },
+    {
+      "seed": 92,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 93,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 3
+    },
+    {
+      "seed": 94,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 95,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 6
+    },
+    {
+      "seed": 96,
+      "correctLeaf": 0,
+      "directCorrect": true,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 97,
+      "correctLeaf": 1,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 1
+    },
+    {
+      "seed": 98,
+      "correctLeaf": 2,
+      "directCorrect": false,
+      "treeCorrect": false,
+      "treeCalls": 14,
+      "unresolvedObjections": 4
+    },
+    {
+      "seed": 99,
+      "correctLeaf": 3,
+      "directCorrect": false,
+      "treeCorrect": true,
+      "treeCalls": 14,
+      "unresolvedObjections": 2
+    }
+  ]
+}

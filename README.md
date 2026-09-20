@@ -66,6 +66,8 @@ npm run check
 npm run demo
 npm run verify:certificate -- test-output/demo/certificate.json
 npm run ablate
+npm run replicate:colosseum
+npm run replicate:discovery
 npm pack --dry-run
 ```
 
@@ -85,6 +87,7 @@ An optional Lean adapter runs a deterministic translation in a locally configure
 - [Architecture, state, and extension points](docs/ARCHITECTURE.md)
 - [Dataset, expression language, and proof evidence](docs/DATA.md)
 - [Verification and reproducible review](docs/VERIFY.md)
+- [Paper replication attempts and boundaries](docs/REPLICATION.md)
 - [Implementation plan](docs/PLAN.md) and [adversarial plan review](docs/ADVERSARIAL-PLAN-REVIEW.md)
 - [Adversarial code review and verification record](docs/ADVERSARIAL-CODE-REVIEW.md)
 - [Executed example evidence](docs/evidence/demo.json) and [ablation trajectories](docs/evidence/ablations.json)

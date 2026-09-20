@@ -17,7 +17,7 @@ Environment: Linux x64, Node **24.19.0**, Pi coding-agent/pi-ai **0.85.1** from 
 | Evaluation | Credential-free default dry run, bounded scripted execution, exact divisor checking, retained errors, rubric isolation, no automatic human/proof-quality verdict |
 | `npm run demo` | Exact fixture exposes torus/two-spheres counterexamples and produces a linear certificate conditional on supplied premises |
 | `npm run verify:certificate -- test-output/demo/certificate.json` | Independent checker accepts the generated certificate against the exact statement/premises |
-| `npm run ablate` | Original five-seed engineering fixture reproduced: full loop 5/5, each specified ablation 0/5; not a paper replication |
+| `npm run ablate` | Corrected five-seed engineering fixture: 0/5 in every mode after excluding algebraic restatements of supplied premises; not a paper replication |
 | `npm run evaluate -- --preset local-ds4 --max-output 1024` | Dry run reports six requests / 6,144 reserved output tokens; no inference sent |
 | `npm pack --dry-run --json` | Package assembles with source, examples, and guides |
 | `git diff --check` | No whitespace errors |

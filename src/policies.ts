@@ -92,7 +92,7 @@ export function spotSymbolically(input: FeatureInput): {
 }
 export class HeuristicPolicy implements Policy {
     async control(input: Parameters<Policy["control"]>[0]) {
-        const failed = input.feedback?.rho === 0;
+        const failed = input.feedback !== null && (input.feedback.rho === 0 || !input.feedback.nondegenerate);
         return { featureCount: failed ? Math.min(8, input.previous.featureCount + 1) : input.previous.featureCount,
             priors: { ...input.previous.priors, sub: failed ? Math.min(0.2, (input.previous.priors.sub ?? 0) + 0.02) : 0 }, reason: failed ? "Broaden features after unsuccessful proof feedback" : "Initial bounded symbolic search" };
     }
@@ -102,21 +102,25 @@ export class HeuristicPolicy implements Policy {
         const best = ranked[0];
         if (!best)
             throw new Error("No atoms to scaffold");
+        const seen = new Set(input.history.map(item => canonical(item.conjecture)));
         // Try a supported, nonvacuous relation between distinct features before falling back to one atom.
-        if (input.feedback?.rho === 0)
+        if (input.feedback && (input.feedback.rho === 0 || !input.feedback.nondegenerate))
             for (const a of ranked)
                 for (const b of ranked) {
                     if (a.atom.id === b.atom.id || canonical(a.atom.expression) === canonical(b.atom.expression))
                         continue;
                     const expression = op("implies", a.atom.expression, b.atom.expression);
+                    if (seen.has(canonical(expression)))
+                        continue;
                     if (certify(expression, []))
                         continue;
                     if (!input.rows.some(r => evaluate(a.atom.expression, r.values) === true))
                         continue;
-                    if (weightedAccuracy(expression, input.rows) > best.accuracy)
+                    if (weightedAccuracy(expression, input.rows) >= best.accuracy)
                         return { expression: { kind: "implies", left: { kind: "atom", id: a.atom.id }, right: { kind: "atom", id: b.atom.id } }, reason: "Relate local features under an explicit observed hypothesis" };
                 }
-        return { expression: { kind: "atom", id: best.atom.id }, reason: "Best weighted relation in the current bounded vocabulary" };
+        const unseen = ranked.find(item => !seen.has(canonical(item.atom.expression))) ?? best;
+        return { expression: { kind: "atom", id: unseen.atom.id }, reason: "Best unseen weighted relation in the current bounded vocabulary" };
     }
     async skeptic(input: Parameters<Policy["skeptic"]>[0]) {
         const updates: {
