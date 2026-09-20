@@ -10,6 +10,7 @@ import { HeuristicPolicy, ModelPolicy, regressionLoss } from "../src/policies.ts
 import { ConfigSchema } from "../src/schema.ts";
 import { leanSource, cleanLeanAxioms, executeBounded } from "../src/lean.ts";
 import { hash } from "../src/store.ts";
+import { conceptFlags } from "../src/concepts.ts";
 const data = () => readFile(new URL("../examples/euler-data.json", import.meta.url), "utf8").then(s => parseDataset(JSON.parse(s)));
 test("exact evaluation finds Euler counterexamples and certifies the rank-nullity consequence", async () => {
     const d = await data();
@@ -54,9 +55,21 @@ test("integer AST rejects unsafe inputs, unknown variables, ill types and excess
     const large = op("mul", n(Number.MAX_SAFE_INTEGER), n(Number.MAX_SAFE_INTEGER));
     assert.equal(evaluate(large, {}), BigInt(Number.MAX_SAFE_INTEGER) ** 2n);
 });
+test("paper-aligned weak concept metrics detect chi and b1 without equating rearranged Euler forms", () => {
+    assert.deepEqual(conceptFlags(naiveEuler), { chi: true, b1: false });
+    assert.deepEqual(conceptFlags(op("eq", op("sub", v("n1"), v("r2")), n(0))), { chi: false, b1: true });
+    assert.deepEqual(conceptFlags(op("implies", op("eq", op("sub", v("n1"), v("r2")), n(0)), naiveEuler)), { chi: true, b1: true });
+    assert.deepEqual(conceptFlags(op("eq", op("add", v("V"), v("F")), op("add", v("E"), n(2)))), { chi: false, b1: false });
+});
 test("nondegeneracy excludes known premises, vacuity, tautologies and inconsistent environment", async () => {
     const d = await data();
     assert.ok(assess(d.premises[0]!, d).reasons.includes("known-premise"));
+    const rearrangedPremise = op("eq", op("sub", op("sub", v("E"), v("n1")), v("r1")), n(0));
+    assert.ok(assess(rearrangedPremise, d).reasons.includes("known-premise-consequence"));
+    assert.equal(assess(rearrangedPremise, d).nondegenerate, false);
+    assert.equal(assess(eulerIdentity, d).reasons.includes("known-premise-consequence"), false);
+    const irrelevantAntecedent = op("implies", naiveEuler, eulerIdentity);
+    assert.ok(assess(irrelevantAntecedent, d).reasons.includes("irrelevant-antecedent"));
     assert.equal(assess(op("implies", naiveEuler, naiveEuler), d).nondegenerate, false);
     assert.ok(assess(op("implies", op("eq", v("V"), n(-1)), naiveEuler), d).reasons.includes("vacuous-antecedent"));
     d.premises.push(op("eq", v("V"), n(-1)));
@@ -147,6 +160,18 @@ test("external proof process handles success, missing executable, output limits,
 test("the symbolic-regression objective responds to data fit and operator priors", () => {
     assert.ok(regressionLoss(naiveEuler, 1, {}) < regressionLoss(naiveEuler, 0.5, {}));
     assert.ok(regressionLoss(naiveEuler, 1, { sub: 1 }) < regressionLoss(naiveEuler, 1, {}));
+});
+test("heuristic policy broadens and scaffolds after a certified but degenerate premise restatement", async () => {
+    const policy = new HeuristicPolicy();
+    const feedback = { rho: 1 as const, outcome: "certified" as const, explanation: "Known premise", nondegenerate: false, reasons: ["known-premise-consequence"] };
+    const controls = await policy.control({ previous: { featureCount: 3, priors: {}, reason: "Initial" }, feedback, round: 1, history: [] });
+    assert.equal(controls.featureCount, 4);
+    const atoms = [
+        { id: "b1", expression: op("eq", op("sub", v("n1"), v("r2")), n(0)), description: "b1 vanishes", patch: "p", accuracy: 1 },
+        { id: "chi", expression: naiveEuler, description: "Euler characteristic two", patch: "p", accuracy: 1 },
+    ];
+    const result = await policy.scaffold({ features: ["V", "E", "F", "n1", "r2"], atoms, rows: [{ id: "sphere", values: { V: 4, E: 6, F: 4, n1: 3, r2: 3 }, weight: 1 }], controls, feedback, history: [] });
+    assert.equal(result.expression.kind, "implies");
 });
 test("restored Lean evidence must bind source, successful exit and allowed axioms", () => {
     const expr = op("eq", v("x"), v("x"));

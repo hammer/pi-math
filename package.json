@@ -35,6 +35,8 @@
     "check": "npm run typecheck && npm test",
     "demo": "node --import tsx examples/demo.ts",
     "ablate": "node --import tsx examples/ablate.ts",
+    "replicate:discovery": "node --import tsx examples/replicate-discovery.ts",
+    "replicate:colosseum": "node --import tsx examples/replicate-colosseum.ts",
     "verify:certificate": "node --import tsx examples/verify-certificate.ts",
     "presets": "node --import tsx examples/generate-presets.ts",
     "evaluate": "node --import tsx examples/evaluate-models.ts"

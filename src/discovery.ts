@@ -74,10 +74,18 @@ export function assess(expr: Expr, d: Dataset): EmpiricalEvidence {
         reasons.push("no-premise-witness");
     if (d.premises.some(p => canonical(p) === canonical(expr)))
         reasons.push("known-premise");
+    // A syntactically different rearrangement of one supplied equality is still
+    // background knowledge, not a discovered concept.  Keep combinations of
+    // multiple premises eligible: those are exactly where useful derived
+    // invariants such as Euler/Betti relations can appear.
+    if (d.premises.some(p => certify(expr, [p])))
+        reasons.push("known-premise-consequence");
     if (tautology(expr))
         reasons.push("propositional-tautology");
     if (certify(expr, []))
         reasons.push("algebraic-tautology");
+    if (expr.kind === "implies" && certify(expr.right, d.premises))
+        reasons.push("irrelevant-antecedent");
     function witness(e: Expr, rows: typeof applicable): void {
         if (e.kind === "implies") {
             const satisfying = rows.filter(r => evaluate(e.left, r.values) === true);
@@ -145,6 +153,7 @@ export interface FeatureInput {
     rows: VisibleRow[];
     controls: Controls;
     feedback: PolicyFeedback | null;
+    history: PolicyHistory[];
 }
 export interface PolicyFeedback {
     rho: 0 | 1;
@@ -153,11 +162,16 @@ export interface PolicyFeedback {
     nondegenerate: boolean;
     reasons: string[];
 }
+export interface PolicyHistory {
+    conjecture: Expr;
+    feedback: PolicyFeedback;
+}
 export interface Policy {
     control(input: {
         previous: Controls;
         feedback: PolicyFeedback | null;
         round: number;
+        history: PolicyHistory[];
     }): Promise<Controls>;
     features(input: FeatureInput): Promise<{
         atoms: {
@@ -176,6 +190,7 @@ export interface Policy {
         rows: VisibleRow[];
         controls: Controls;
         feedback: PolicyFeedback | null;
+        history: PolicyHistory[];
     }): Promise<{
         expression: Scaffold;
         reason: string;
@@ -280,11 +295,12 @@ export class DiscoveryEngine {
         }
         const last = s.rounds.at(-1);
         const feedback: PolicyFeedback | null = s.ablations.proofFeedback && last ? { rho: last.proof.rho, outcome: last.proof.outcome, explanation: last.proof.explanation, nondegenerate: last.evidence.nondegenerate, reasons: last.evidence.reasons } : null;
-        const controls = s.ablations.controller ? ControlsSchema.parse(await this.policy.control({ previous: s.controls, feedback, round: s.rounds.length })) : s.controls;
+        const history: PolicyHistory[] = s.rounds.map(round => ({ conjecture: round.conjecture, feedback: { rho: round.proof.rho, outcome: round.proof.outcome, explanation: round.proof.explanation, nondegenerate: round.evidence.nondegenerate, reasons: round.evidence.reasons } }));
+        const controls = s.ablations.controller ? ControlsSchema.parse(await this.policy.control({ previous: s.controls, feedback, round: s.rounds.length, history })) : s.controls;
         const d = structuredClone(s.dataset);
         if (!s.ablations.dynamicData)
             d.patches = d.patches.map(p => ({ ...p, weights: d.rows.map(() => 1) }));
-        const results = await settleAll(d.patches.map(p => this.policy.features({ description: d.description, features: d.features, patch: p.id, rows: visibleRows(d, p.weights), controls, feedback })));
+        const results = await settleAll(d.patches.map(p => this.policy.features({ description: d.description, features: d.features, patch: p.id, rows: visibleRows(d, p.weights), controls, feedback, history })));
         const atoms: Atom[] = [], definitions: Definition[] = [];
         for (const [i, result] of results.entries()) {
             if (result.atoms.length < 1 || result.atoms.length > controls.featureCount)
@@ -300,7 +316,7 @@ export class DiscoveryEngine {
             for (const def of result.definitions)
                 definitions.push({ ...def, expression: parseExpr(def.expression, d.features), round: s.rounds.length });
         }
-        const scaffold = await this.policy.scaffold({ features: d.features, atoms, rows: visibleRows(d, unionWeights(d)), controls, feedback });
+        const scaffold = await this.policy.scaffold({ features: d.features, atoms, rows: visibleRows(d, unionWeights(d)), controls, feedback, history });
         const conjecture = parseExpr(expandScaffold(scaffold.expression, atoms), d.features), evidence = assess(conjecture, d);
         const proof = await this.prover.prove(conjecture, d.premises, this.signal);
         checkedFeedback(conjecture, d.premises, proof);

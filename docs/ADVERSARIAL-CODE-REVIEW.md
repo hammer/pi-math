@@ -46,3 +46,15 @@ The suite includes 100 seeded certificate cases, independent coefficient checkin
 - Partial aggregation stages are auditable but recomputed after interruption. Exported JSON is portable for review; automatic importing and checkpoint migration are not implemented.
 
 Disposition: the implemented software acceptance criteria pass. Broader claims about mathematical discovery quality require independent evaluation on suitable tasks, providers and formal environments.
+
+## Follow-up: why the first live session found failures the suite missed
+
+PR #10 was prompted by a real model paraphrasing the exact theorem target, returning a prose value where a structured field was required, and exhausting exploration rounds while no valid strategy existed. The original release checks did not catch those behaviors for concrete, auditable reasons:
+
+- Proof-workflow tests used deterministic workers whose strategy cards were schema-perfect and copied the target and assumptions exactly. They tested transitions after valid artifacts, not recovery from realistic near-valid artifacts.
+- Transport/onboarding tests used Pi's real HTTP client but a mock server and synthetic schemas. They established serialization, limits and cancellation, not a complete proof session across the domain schemas.
+- The acceptance record explicitly left a paid/live-model run and a full live proof session pending. CI therefore closed the declared software criteria while leaving this integration boundary unexecuted.
+- `maxSectionAttempts` protected proof-section retries, but stage-level strategy and decomposition drafts were one-shot. The test matrix did not call out that asymmetry.
+- The exploration counter was incremented before strategy generation. The tests covered the mathematical round limit but not repeated infrastructure/schema failures before the first artifact.
+
+PR #10 added bounded correction for schema- and local-validation failures and made exploration rounds commit only after a valid strategy is produced. The durable prevention is not a larger collection of happy-path fixtures: keep replay cases for near-valid provider outputs, run a small complete Pi session for each supported live recipe before calling it validated, and report that live acceptance separately from deterministic CI.

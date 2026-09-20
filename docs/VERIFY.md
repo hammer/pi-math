@@ -10,6 +10,8 @@ npm run check
 npm run demo
 npm run verify:certificate -- test-output/demo/certificate.json
 npm run ablate
+npm run replicate:colosseum
+npm run replicate:discovery
 npm pack --dry-run
 ```
 
@@ -53,7 +55,7 @@ The exact algebra checker is a small trusted computing base. It is separate from
 | No proof feedback | Prover still runs for measurement; outcomes withheld from future policy inputs |
 | Regression only | All data visible, controls fixed, no proof feedback |
 
-With the supplied fixture and baseline, the initial run produced five successful full-loop episodes and zero for each ablation. Inspect the discovered statements: a successful episode is a nondegenerate certified consequence of supplied premises, not necessarily the intended Euler identity. The fixture and heuristic are deliberately small. This is an engineering regression experiment, with no statistical significance or comparison to the papers' trained systems claimed. See `test-output/ablations/report.json` to assess what changed and why.
+With the corrected nondegeneracy checks, the supplied fixture produces zero successful episodes in every mode. The earlier full-loop 5/5 was an algebraic rearrangement of one supplied rank-nullity premise, not a discovery. The fixture and heuristic are deliberately small. This is an engineering regression experiment, with no statistical significance or comparison to the papers' trained systems claimed. See `test-output/ablations/report.json` and [REPLICATION.md](REPLICATION.md) to assess what changed and why.
 
 ## Model onboarding verification
 
